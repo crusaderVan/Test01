@@ -50,23 +50,23 @@ def parseDocument(file_dir):
     ns = {'ofdns': 'http://www.ofdspec.org'}
     root = docTree.getroot()
     outLines = root.find('ofdns:Outlines', ns)
-    for outlineElems in outLines:
-        getOutLines(outlineElems)
+    for outlineElem in outLines:
+        getOutLines(outlineElem)
 
-def getOutLines(outlineElems):
+def getOutLines(outlineElem):
     ns = {'ofdns': 'http://www.ofdspec.org'}
     # 如果没有子节点输出当前结点然后return
-    if(len(outlineElems) == 0):
-        for outlineElem in outlineElems:
-            print(outlineElem.get('Title'))
+    if(outlineElem.findall('ofdns:OutlineElem', ns) is None):
+        for oe in outlineElem:
+            print(oe.get('Title'))
         return
-    else:
-        #输出当前节点
-        print(outlineElem.get('Title'))
-        # 获取子节点
-        sub_outlineElems = outlineElems.findall('ofdns:OutlineElem', ns)
-        # 递归调用
-        getOutLines(sub_outlineElems)
+    #输出当前节点
+    print(outlineElem.get('Title'))
+    # 获取子节点list
+    sub_outlineElems = outlineElem.findall('ofdns:OutlineElem', ns)
+    for sub_oe in sub_outlineElems:
+        # 对每个子节点递归调用
+        getOutLines(sub_oe)
 
 dir = 'C:/Users/dell/Desktop/ofd/test/'
 f = '测试文档.ofd'
